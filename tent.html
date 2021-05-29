@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="display.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Patient Input System</h1>
+
+    <div>
+        <label for="tentName">Tent Name </label>
+        <input id="tentName" type="text">
+        <label for="nowServingField"> Currently Serving </label>
+        <input id="nowServingField" type="text">
+        <!-- link to team on 2B  -->
+    </div>
+
+
+    <button id="nextPatientButton" style="display: block" onclick="nextPatient()">Next Patient</button>
+
+    <button style="display: none" id="patientPresentButton" onclick="patientPresent()">Patient Present </button>
+
+    <script>
+        
+        const server="http://localhost:3000"
+        
+        const patientPresentButton = document.getElementById("patientPresentButton");
+        const nextPatientButton = document.getElementById("nextPatientButton");
+           
+
+        async function nextPatient() {
+            
+            nextPatientButton.style.display = "none";  //3b
+            patientPresentButton.style.display = "block";  //3c
+
+            //nowServing(document.getElementById("tentName").value)
+            let tent = document.getElementById("tentName").value
+            let URL= `${server}/next?tent=${tent}`
+            obj = await callServer(URL)
+            document.getElementById('nowServingField').value = obj.ticket
+        }
+
+        async function patientPresent() {
+            
+            patientPresentButton.style.display = "none";  //4a
+            nextPatientButton.style.display = "block";  //4b
+
+            let ticketNum = document.getElementById('nowServingField').value 
+            let URL= `${server}/present?ticket=${ticketNum}`
+
+            const obj = await callServer(URL)
+            console.log(obj)
+
+        }
+
+        
+        async function callServer(URL) {
+            let response = await fetch(URL)
+            const obj = await response.json();  // we use built in method in response - .json()
+            return obj
+        }
+
+    </script>
+</body>
+
+</html>
